@@ -1,0 +1,43 @@
+# ==============================
+# FOLDER YANG TIDAK DIGUNAKAN
+# ==============================
+# Mengabaikan folder Laravel lama agar tidak ikut ter-upload
+crack_detection_web/
+
+# Mengabaikan file Jupyter Notebook riset (Opsional)
+deteksi_retak_beton.ipynb
+best_crack_model.h5
+
+# ==============================
+# PYTHON & FLASK & ML
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+venv/
+ENV/
+env/
+flask_api/temp_img.jpg
+flask_api/uploads/
+*.log
+
+# ==============================
+# VS CODE & EDITOR
+# ==============================
+.vscode/
+*.code-workspace
+.idea/
+
+# ==============================
+# OS GENERATED FILES
+# ==============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
