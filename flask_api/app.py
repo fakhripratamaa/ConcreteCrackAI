@@ -21,6 +21,10 @@ try:
 except Exception as e:
     print(f"Error loading model: {e}")
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "ConcreteCrack AI Backend is Online!", "model_loaded": model is not None}), 200
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if 'image' not in request.files:
