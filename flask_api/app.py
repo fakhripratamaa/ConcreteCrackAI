@@ -164,11 +164,12 @@ def analyze():
         
     except Exception as e:
         import traceback
+        tb = traceback.format_exc()
         print("=== EXCEPTION TERJADI DI /ANALYZE ===")
-        traceback.print_exc()
+        print(tb)
         print("======================================")
         
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e), 'traceback': tb}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

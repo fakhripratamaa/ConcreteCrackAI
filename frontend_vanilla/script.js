@@ -124,7 +124,16 @@ analyzeBtn.addEventListener('click', async () => {
         });
 
         if (!response.ok) {
-            throw new Error(`Server API merespons dengan status ${response.status}`);
+            let detail = "";
+            try {
+                const errData = await response.json();
+                if (errData.traceback) {
+                    detail = `\n\n[PYTHON TRACEBACK]:\n${errData.traceback}`;
+                } else if (errData.error) {
+                    detail = `\n\n[ERROR]: ${errData.error}`;
+                }
+            } catch(e) {}
+            throw new Error(`Server API merespons dengan status ${response.status}.${detail}`);
         }
 
         const data = await response.json();
