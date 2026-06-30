@@ -39,16 +39,21 @@ def analyze():
         
     file = request.files['image']
     
-    # Save temporarily (Menggunakan tempfile agar aman dari PermissionError di Docker)
-    temp_fd, temp_path = tempfile.mkstemp(suffix=".jpg")
-    os.close(temp_fd) # Tutup descriptor bawaan agar Flask bisa menimpanya
-    file.save(temp_path)
-    
     try:
-        # 1. Prediction using CNN
-        img = image.load_img(temp_path, target_size=(227, 227))
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0) / 255.0
+        # MEMBACA FILE LANGSUNG DARI RAM (IN-MEMORY)
+        # Bypassing Docker Filesystem 100% untuk menghindari PermissionError atau I/O Corrupt
+        file_bytes = np.frombuffer(file.read(), np.uint8)
+        img_cv = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+        
+        if img_cv is None:
+            return jsonify({'error': 'Format file gambar tidak didukung atau corrupt'}), 400
+            
+        # Konversi dari BGR (OpenCV) ke RGB (untuk Keras Model)
+        img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+        
+        # 1. Prediction using CNN (Manual Resize menggantikan image.load_img)
+        img_resized = cv2.resize(img_rgb, (227, 227))
+        img_array = np.expand_dims(img_resized, axis=0) / 255.0
         
         prediction = model.predict(img_array)
         score = float(prediction[0][0])
@@ -57,8 +62,6 @@ def analyze():
         cnn_result = "CRACK" if is_crack else "NO CRACK"
         
         # 2. OpenCV Analysis
-        img_cv = cv2.imread(temp_path)
-        img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
         
         gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
         
@@ -147,8 +150,6 @@ def analyze():
         _, buffer = cv2.imencode('.jpg', img_bgr)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
         
-        os.remove(temp_path)
-        
         return jsonify({
             'prediction': cnn_result,
             'confidence': round(score * 100, 2),
@@ -160,10 +161,15 @@ def analyze():
             'image_base64': img_base64
         })
         
+        
     except Exception as e:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        tb = traceback.format_exc()
+        print("=== EXCEPTION TERJADI DI /ANALYZE ===")
+        print(tb)
+        print("======================================")
+        
+        return jsonify({'error': str(e), 'traceback': tb}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
