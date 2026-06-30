@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+venv/
+ENV/
+env/
+flask_api/temp_img.jpg
+*.log
+.DS_Store
+.vscode/
+
+# Abaikan frontend saat membuat image docker backend agar ukuran image kecil
+crack_detection_web/
+frontend_vanilla/
+deteksi_retak_beton.ipynb
+.git/
