@@ -1,5 +1,6 @@
 import os
 import cv2
+import tempfile
 import numpy as np
 import base64
 from flask import Flask, request, jsonify
@@ -38,8 +39,9 @@ def analyze():
         
     file = request.files['image']
     
-    # Save temporarily
-    temp_path = "temp_img.jpg"
+    # Save temporarily (Menggunakan tempfile agar aman dari PermissionError di Docker)
+    temp_fd, temp_path = tempfile.mkstemp(suffix=".jpg")
+    os.close(temp_fd) # Tutup descriptor bawaan agar Flask bisa menimpanya
     file.save(temp_path)
     
     try:
