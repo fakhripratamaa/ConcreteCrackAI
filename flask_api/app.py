@@ -11,11 +11,17 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the trained model
-# Menggunakan relative path agar aman saat di-deploy ke GitHub/Render atau dibuka di komputer lain
+from huggingface_hub import hf_hub_download
+
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best_crack_model.keras")
 model = None
 
 try:
+    # Jika model tidak ada di lokal (misal saat di Docker HF Spaces), download dari HF Model Hub
+    if not os.path.exists(MODEL_PATH):
+        print("Downloading model from Hugging Face Hub...")
+        MODEL_PATH = hf_hub_download(repo_id="fakhri2/ConcreteCrackAI-Model", filename="best_crack_model.keras")
+        
     model = load_model(MODEL_PATH)
     print("Model loaded successfully.")
 except Exception as e:
