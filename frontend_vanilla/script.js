@@ -114,11 +114,8 @@ analyzeBtn.addEventListener('click', async () => {
     const startTime = performance.now();
 
     try {
-        // Tentukan URL Backend API (Otomatis menyesuaikan antara Localhost & Production)
-        // GANTI string 'https://backend-anda.onrender.com' dengan URL asli dari Render nanti
-        const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://127.0.0.1:5000' 
-            : 'https://backend-anda.onrender.com';
+        // Tentukan URL Backend API (Hugging Face Spaces)
+        const API_BASE_URL = 'https://fakhri2-concretecrackai-backend.hf.space';
 
         // Panggil API Flask
         const response = await fetch(`${API_BASE_URL}/analyze`, {
