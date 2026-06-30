@@ -138,7 +138,7 @@ analyzeBtn.addEventListener('click', async () => {
         
     } catch (error) {
         console.error('Error saat menganalisis:', error);
-        alert('Gagal melakukan analisis. Pastikan backend Flask CNN sedang berjalan di port 5000.');
+        alert(`Gagal melakukan analisis. Pesan error: ${error.message}. Silakan cek Console (F12) untuk detailnya.`);
     } finally {
         // Kembalikan tombol dan matikan loading spinner
         analyzeBtn.style.display = 'flex';
