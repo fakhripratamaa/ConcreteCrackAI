@@ -1,3 +1,11 @@
+---
+title: ConcreteCrack AI Backend
+emoji: 🏗️
+colorFrom: blue
+colorTo: gray
+sdk: docker
+---
+
 # ConcreteCrack AI
 
 ConcreteCrack AI adalah aplikasi deteksi retakan pada permukaan beton berbasis Computer Vision menggunakan model *Convolutional Neural Network* (CNN) dan deteksi tepi *OpenCV*. 
